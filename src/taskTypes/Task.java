@@ -1,19 +1,18 @@
 package taskTypes;
 
 
-import static taskTypes.TaskStatus.statuses;
 
 public class Task {
     final String name;
     final String description;
     final int id;
-    String status;
+    TaskStatus status;
 
     public Task(int id, String name, String description){
         this.id = id;
         this.name = name;
         this.description = description;
-        this.status = statuses[0];
+        this.status = TaskStatus.NEW;
     }
 
     public String getName() {
@@ -28,8 +27,8 @@ public class Task {
         return status;
     }
 
-    public void setStatus(int statusId) {
-        this.status = TaskStatus.statuses[statusId];
+    public void setStatus(TaskStatus status) {
+        this.status = TaskStatus.IN_PROGRESS;
     }
 
     @Override

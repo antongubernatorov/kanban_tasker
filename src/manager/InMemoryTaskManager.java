@@ -1,18 +1,20 @@
+package manager;
+
+import manager.TaskManager;
 import taskTypes.Epic;
 import taskTypes.Subtask;
 import taskTypes.Task;
-import taskTypes.TaskStatus;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Manager {
+public class InMemoryTaskManager implements TaskManager {
 
     static int id = 0;
     HashMap<Integer, Task> tasks = new HashMap<>();
     HashMap<Integer, Subtask> subtasks = new HashMap<>();
     HashMap<Integer, Epic> epics = new HashMap<>();
-
 
     //работа с тасками
     public void createNewTask(String name, String description){
@@ -57,6 +59,11 @@ public class Manager {
         System.out.println(epics);
     }
 
+    public void getEpic(int id){
+        Epic epic = epics.get(id);
+        System.out.println(epic);
+    }
+
     public void addSubtasks(int id, String name, String description){
         if(epics.containsKey(id)) {
             epics.get(id).addSubtask(name, description);
@@ -80,4 +87,5 @@ public class Manager {
             epic.setStatus(2);
         }
     }
+
 }
