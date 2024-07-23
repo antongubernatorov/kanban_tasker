@@ -1,31 +1,36 @@
 package manager;
 
 import taskTypes.Epic;
+import taskTypes.Subtask;
 import taskTypes.Task;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public interface TaskManager {
-    public void createNewTask(String name, String description);
+    ArrayList<Task> getAllTasks();
+    ArrayList<Epic> getAllEpics();
+    ArrayList<Subtask> getAllSubtasks();
+    ArrayList<Subtask> getEpicSubtasks(int id);
+    Task getTaskById(int id);
+    Epic getEpicById(int id);
+    Subtask getSubtaskById(int id);
+    void createNewTask(Task task);
+    void createNewEpic(Epic epic);
+    void createNewSubtask(Subtask subtask);
+    void updateTask(Task task);
+    void updateEpic(Epic epic);
+    void updateSubtask(Subtask subtask);
+    void deleteTaskById(int id);
+    void deleteEpicById(int id);
+    void deleteSubtaskById(int id);
+    void deleteAllTasks();
+    void deleteAllEpics();
+    void deleteAllSubtasks();
+    void deleteAllTaskTypes();
+    List<Task> getHistory();
+    void remove(int id);
+    List<Subtask> getSubtaskByEpic(Epic epic);
 
-    public void showTasks();
-
-    public void clearTasks();
-
-    public void getTask(int id);
-
-    public void updateTask(int id, String name, String description);
-    public void updateTask(int id, int statusId);
-
-    //работа с эпиками
-    public void createEpic(String name, String description);
-
-    public void showEpics();
-
-    public void getEpic(int id);
-
-    public void addSubtasks(int id, String name, String description);
-
-    public void showSubtasks(int id);
-
-    public void checkSubtasksStatus(int id);
 
 }

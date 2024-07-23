@@ -1,21 +1,23 @@
 package manager;
 
-import java.util.ArrayList;
-import java.util.List;
+import taskTypes.Task;
+
+import java.util.LinkedList;
 
 public class InMemoryHistoryManager implements HistoryManager {
-
-    List<Integer> historyManager = new ArrayList<>();
-
+    private final LinkedList<Task> taskList = new LinkedList<>();
     @Override
-    public void add(int id) {
-        //нужно добавить логику, что максимум элементов 10
-        historyManager.add(id);
-
+    public void add(Task task) {
+        taskList.add(task);
     }
 
     @Override
-    public List<Integer> getHistory() {
-        return historyManager;
+    public LinkedList<Task> getHistory() {
+        return taskList;
+    }
+
+    @Override
+    public void remove(int id) {
+        taskList.remove(id);
     }
 }

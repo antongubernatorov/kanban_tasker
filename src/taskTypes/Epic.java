@@ -5,41 +5,52 @@ import taskTypes.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Epic extends Task {
 
-    List<Subtask> subtasks;
+    private final List<Integer> subtaskIds;
 
     public Epic(int id, String name, String description) {
         super(id, name, description);
-        subtasks = new ArrayList<>();
+        subtaskIds = new ArrayList<>();
     }
 
-    public void showSubtasks(){
-        System.out.println(this.subtasks);
+    public Epic(String name, String description) {
+        super(name, description);
+        subtaskIds = new ArrayList<>();
     }
 
-    public void addSubtask(String name, String description){
-        Subtask subtask = new Subtask(id ,name, description);
-        subtasks.add(subtask);
+    public List<Integer> getSubtaskIds(){
+        return subtaskIds;
     }
 
-    public boolean checkSubtasks(){
-        boolean allIsDone = true;
-        for(Subtask el: subtasks){
-            if (el.status.equals("NEW") || el.status.equals("IN_PROGRESS")){
-                allIsDone = false;
-            }
-        }
-        return allIsDone;
+    public void addSubtaskId(int id){
+        subtaskIds.add(id);
+    }
+
+    public int getNumberOfSubtasks(){
+        return subtaskIds.size();
     }
 
     @Override
     public String toString() {
-        return "[" + "Название='" + name + '\'' +
-                ", Описание='" + description + '\'' +
-                ", Статус='" + status + '\'' +
-                ", Подзадачи=" + subtasks +
-                ']';
+        return "Epic{" +
+                "subtaskIds=" + subtaskIds +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Epic epic = (Epic) o;
+        return Objects.equals(subtaskIds, epic.subtaskIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subtaskIds);
     }
 }
