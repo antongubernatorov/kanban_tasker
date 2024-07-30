@@ -1,3 +1,4 @@
+import classes.CustomLinkedList;
 import manager.InMemoryTaskManager;
 import taskTypes.Epic;
 import taskTypes.Subtask;
@@ -19,8 +20,8 @@ public class Main {
         taskManager.createNewEpic(epic);
         System.out.println(allTasks);
         ArrayList<Epic> allEpics = taskManager.getAllEpics();
-        /*Subtask subtask = new Subtask("Купить торт", "в магните скидка", TaskStatus.NEW , 1);
-        taskManager.createNewSubtask(subtask);*/
+        Subtask subtask = new Subtask("Купить торт", "в магните скидка", TaskStatus.NEW , 1);
+        taskManager.createNewSubtask(subtask);
         List<Task> history = taskManager.getHistory();
         System.out.println(history);
     }
