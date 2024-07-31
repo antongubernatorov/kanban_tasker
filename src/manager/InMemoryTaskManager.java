@@ -19,7 +19,7 @@ public class InMemoryTaskManager implements TaskManager {
     public static int idGenerator = -1;
 
     //INITIALIZE
-    public static final HistoryManager historyManager = null;
+    public static final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
     @Override
     public ArrayList<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
@@ -53,7 +53,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpicById(int id) {
-        historyManager.add(tasks.get(id));
+        historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
@@ -81,7 +81,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createNewSubtask(Subtask subtask) {
-        Epic epic = getEpicById(subtask.getId());
+        Epic epic = getEpicById(subtask.getEpicId());
         int id = generateNewId();
         subtask.setId(id);
         subtask.setStatus(TaskStatus.NEW);
