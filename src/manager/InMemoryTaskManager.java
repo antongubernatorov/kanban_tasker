@@ -7,6 +7,7 @@ import taskTypes.Task;
 import taskTypes.TaskStatus;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createNewTask(Task task) {
+    public void createNewTask(Task task){
         int id = generateNewId();
         task.setId(id);
         task.setStatus(TaskStatus.NEW);

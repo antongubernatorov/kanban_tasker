@@ -68,10 +68,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return "[" + "Название='" + name + '\'' +
-                ", Описание='" + description + '\'' +
-                ", Статус='" + status + '\'' +
-                "]";
+        return id + "," +
+                "Task" + "," +
+                name + "," +
+                status + "," +
+                description;
     }
 
     @Override

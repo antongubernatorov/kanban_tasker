@@ -35,10 +35,13 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
-                "subtaskIds=" + subtaskIds +
-                '}';
+        return super.getId() + "," +
+                "Epic" + "," +
+                super.getName() + "," +
+                super.getStatus() + "," +
+                super.getDescription();
     }
+
 
     @Override
     public boolean equals(Object o) {
