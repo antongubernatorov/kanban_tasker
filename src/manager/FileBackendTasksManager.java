@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class FileBackendTasksManager extends InMemoryTaskManager{
@@ -58,86 +59,91 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
     @Override
     public void createNewTask(Task task){
         super.createNewTask(task);
+        save();
     }
 
     @Override
     public void createNewEpic(Epic epic) {
         super.createNewEpic(epic);
+        save();
     }
 
     @Override
     public void createNewSubtask(Subtask subtask) {
         super.createNewSubtask(subtask);
+        save();
     }
 
     @Override
     public void updateTask(Task task) {
         super.updateTask(task);
+        save();
     }
 
     @Override
     public void updateEpic(Epic epic) {
         super.updateEpic(epic);
+        save();
     }
 
     @Override
     public void updateSubtask(Subtask subtask) {
         super.updateSubtask(subtask);
+        save();
     }
 
     @Override
     public void deleteTaskById(int id) {
         super.deleteTaskById(id);
+        save();
     }
 
     @Override
     public void deleteEpicById(int id) {
         super.deleteEpicById(id);
+        save();
     }
 
     @Override
     public void deleteSubtaskById(int id) {
         super.deleteSubtaskById(id);
+        save();
     }
 
     @Override
     public void deleteAllTasks() {
         super.deleteAllTasks();
+        save();
     }
 
     @Override
     public void deleteAllEpics() {
         super.deleteAllEpics();
+        save();
     }
 
     @Override
     public void deleteAllSubtasks() {
         super.deleteAllSubtasks();
+        save();
     }
 
     @Override
     public void deleteAllTaskTypes() {
         super.deleteAllTaskTypes();
-    }
-
-    @Override
-    public List<Task> getHistory() {
-        return super.getHistory();
+        save();
     }
 
     @Override
     public void remove(int id) {
         super.remove(id);
+        save();
     }
 
     @Override
     public List<Subtask> getSubtaskByEpic(Epic epic) {
+        save();
         return super.getSubtaskByEpic(epic);
-    }
-
-    @Override
-    public int getId() {
-        return super.getId();
     }
 
     public void save() throws ManagerSaveException {
@@ -148,7 +154,7 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
         }
         try(Writer fileWriter = new FileWriter(file);
         BufferedWriter bw = new BufferedWriter(fileWriter)){
-            bw.write("id, type, name, status, description, epic\n");
+            bw.write("id,type,name,status,description,startTime,duration,epic\n");
             for(Task task : tasks.values()){
                 bw.write(task.toString() + "\n");
             }
@@ -162,7 +168,7 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
             bw.write(historyToString(historyManager));
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            throw new ManagerSaveException("Произощла ошибка при сохранении в файл");
+            throw new ManagerSaveException("Произошла ошибка при сохранении в файл");
         }
     }
 
@@ -193,17 +199,19 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
         switch (entryArray[1]){
             case "Task":
                 id = Integer.parseInt(entryArray[0]);
-                task = new Task(entryArray[2], entryArray[3], TaskStatus.valueOf(entryArray[4]));
+                task = new Task(entryArray[2], entryArray[4], TaskStatus.valueOf(entryArray[3]), LocalDateTime.parse(entryArray[5]), Integer.parseInt(entryArray[6]));
                 task.setId(id);
                 break;
             case "Subtask":
                 id = Integer.parseInt(entryArray[0]);
-                task = new Subtask(entryArray[2], entryArray[3], TaskStatus.valueOf(entryArray[4]), Integer.parseInt(entryArray[5]));
+                task = new Subtask(entryArray[2], entryArray[4],
+                        LocalDateTime.parse(entryArray[5]), Integer.parseInt(entryArray[6]),
+                        TaskStatus.valueOf(entryArray[3]), Integer.parseInt(entryArray[7]));
                 task.setId(id);
                 break;
             case "Epic":
                 id = Integer.parseInt(entryArray[0]);
-                task = new Epic(entryArray[2], entryArray[3]);
+                task = new Epic(entryArray[2], entryArray[4], LocalDateTime.parse(entryArray[5]), Integer.parseInt(entryArray[6]));
                 task.setId(id);
                 task.setStatus(TaskStatus.valueOf(entryArray[3]));
                 break;
@@ -251,17 +259,21 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
     }
 
     public static void main(String[] args) {
-        TaskManager manager = Managers.getNewDefault(new File("src/files", "SaveTasks.csv"));
+        File file = new File("src/files", "SaveTasks.csv");
+        FileBackendTasksManager manager = new FileBackendTasksManager(file);
 
         Task taskOne = new Task(
                 "Task 1",
-                "Описание Task 1");
+                "Описание Task 1",
+                LocalDateTime.now(), 30);
         Task taskTwo = new Task(
                 "Task 2",
-                "Описание Task 2");
+                "Описание Task 2",
+                LocalDateTime.now(), 40);
         Task taskThree = new Task(
                 "Task 3",
-                "Описание Task 3");
+                "Описание Task 3",
+                LocalDateTime.now(), 60);
 
         manager.createNewTask(taskOne);
         manager.createNewTask(taskTwo);
@@ -269,13 +281,16 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
 
         Epic epicOne = new Epic(
                 "Epic 1",
-                "Описание Epic 1");
+                "Описание Epic 1",
+                LocalDateTime.now(), 30);
         Epic epicTwo = new Epic(
                 "Epic 2",
-                "Описание Epic 2");
+                "Описание Epic 2",
+                LocalDateTime.now(), 30);
         Epic epicThree = new Epic(
                 "Epic 3",
-                "Описание Epic 3");
+                "Описание Epic 3",
+                LocalDateTime.now(), 30);
 
         manager.createNewEpic(epicOne);
         manager.createNewEpic(epicTwo);
@@ -284,22 +299,27 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
         Subtask subtaskOneEpicOne = new Subtask(
                 "Subtask 1 Epic 1",
                 "Описание Subtask 1 Epic 1",
+                LocalDateTime.now(), 30,
                 epicOne.getId());
         Subtask subtaskTwoEpicOne = new Subtask(
                 "Subtask 2 Epic 1",
                 "Описание Subtask 2 Epic 1",
+                LocalDateTime.now(), 30,
                 epicOne.getId());
         Subtask subtaskTreeEpicOne = new Subtask(
                 "Subtask 3 Epic 1",
                 "Описание Subtask 3 Epic 1",
+                LocalDateTime.now(), 30,
                 epicOne.getId());
         Subtask subtaskOneEpicTwo = new Subtask(
                 "Subtask 1 Epic 2",
                 "Описание Subtask 1 Epic 2",
+                LocalDateTime.now(), 30,
                 epicTwo.getId());
         Subtask subtaskTwoEpicTwo = new Subtask(
                 "Subtask 2 Epic 2",
                 "Описание Subtask 2 Epic 2",
+                LocalDateTime.now(), 30,
                 epicTwo.getId());
 
         manager.createNewSubtask(subtaskOneEpicOne);
@@ -330,8 +350,6 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
         manager.getSubtaskById(8);
         manager.deleteTaskById(0);
         manager.deleteSubtaskById(10);
-
-        FileBackendTasksManager fileBackendTasksManager = new FileBackendTasksManager();
-        fileBackendTasksManager.save();
+        manager.save();
     }
 }
