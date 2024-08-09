@@ -7,20 +7,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    CustomLinkedList tasksList = new CustomLinkedList();
+    private final CustomLinkedList tasksList = new CustomLinkedList();
+
     @Override
     public void add(Task task) {
         tasksList.linkLast(task);
     }
 
     @Override
-    public List<Task> getHistory() {
-        return tasksList.getWatchedTasks();
+    public void remove(int id) {
+        tasksList.removeNode(tasksList.getNode(id));
     }
 
     @Override
-    public void remove(int id) {
-        CustomLinkedList.Node node = tasksList.getNode(id);
-        tasksList.removeNode(node);
+    public List<Task> getHistory() {
+        return tasksList.getWatchedTasks();
     }
 }

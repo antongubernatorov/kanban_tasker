@@ -1,21 +1,14 @@
 package taskTypes;
 
-import taskTypes.Task;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Subtask extends Task {
-
     private int epicId;
 
-    public Subtask(int id, String name, String description, TaskStatus status, LocalDateTime startTime, int duration, int epicId) {
+    public Subtask(int id, String name, String description, TaskStatus status,
+                   LocalDateTime startTime, int duration, int epicId) {
         super(id, name, description, status, startTime, duration);
-        this.epicId = epicId;
-    }
-
-    public Subtask(String name, String description, LocalDateTime startTime, int duration, TaskStatus status, int epicId) {
-        super(name, description, status, startTime, duration);
         this.epicId = epicId;
     }
 
@@ -24,8 +17,18 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
+    public Subtask(String name, String description, TaskStatus status, LocalDateTime startTime,
+                   int duration, int epicId) {
+        super(name, description, status, startTime, duration);
+        this.epicId = epicId;
+    }
+
     public int getEpicId() {
         return epicId;
+    }
+
+    public void setEpicId(int epicId) {
+        this.epicId = epicId;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class Subtask extends Task {
                 super.getDescription() + "," +
                 super.getStartTime() + "," +
                 super.getDuration() + "," +
+                super.getEndTime() + "," +
                 getEpicId();
     }
 }
