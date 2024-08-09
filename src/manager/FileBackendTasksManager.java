@@ -7,8 +7,10 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FileBackendTasksManager extends InMemoryTaskManager{
 
@@ -251,29 +253,62 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
             allTasks.putAll(subtasks);
             history.forEach(i -> historyManager.add(allTasks.get(i)));
             return fileBackendTasksManager;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public static void printHistory(List<Task> history){
+        System.out.println("История просмотров:");
+        for(Task task : history){
+            var gottedTask = tasks.get(task.getId());
+            System.out.println(gottedTask + "  " + "\n");
+        }
+        System.out.println();
+    }
+
+    public static void printSortedTasks(List<Task> tasksSorted){
+        System.out.println("Отсортированные задачи: ");
+        for (Task task: tasksSorted){
+            var gottedTask = tasks.get(task.getId());
+            System.out.println(gottedTask + " " + "\n");
+        }
+        System.out.println();
+    }
+
+
+    public static List<Task> getPrioritizedTask() {
+        return getPrioritizedTask();
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return super.getHistory();
+    }
+
+    @Override
+    public int getEpicEndTime(int id) {
+        return super.getEpicEndTime(id);
+    }
+
     public static void main(String[] args) {
-        File file = new File("src/files", "SaveTasks.csv");
-        FileBackendTasksManager manager = new FileBackendTasksManager(file);
+        TaskManager manager = Managers.getNewDefault(new File("src/files", "SaveTasks.csv"));
 
         Task taskOne = new Task(
                 "Task 1",
                 "Описание Task 1",
-                LocalDateTime.now(), 30);
+                LocalDateTime.of(2022,12,10,10,0),
+                30);
         Task taskTwo = new Task(
                 "Task 2",
                 "Описание Task 2",
-                LocalDateTime.now(), 40);
+                LocalDateTime.of(2022,12,10,11,0),
+                30);
         Task taskThree = new Task(
                 "Task 3",
                 "Описание Task 3",
-                LocalDateTime.now(), 60);
+                LocalDateTime.of(2022,12,10,12,0),
+                45);
 
         manager.createNewTask(taskOne);
         manager.createNewTask(taskTwo);
@@ -282,15 +317,18 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
         Epic epicOne = new Epic(
                 "Epic 1",
                 "Описание Epic 1",
-                LocalDateTime.now(), 30);
+                null,
+                0);
         Epic epicTwo = new Epic(
                 "Epic 2",
                 "Описание Epic 2",
-                LocalDateTime.now(), 30);
+                null,
+                0);
         Epic epicThree = new Epic(
                 "Epic 3",
                 "Описание Epic 3",
-                LocalDateTime.now(), 30);
+                null,
+                0);
 
         manager.createNewEpic(epicOne);
         manager.createNewEpic(epicTwo);
@@ -299,27 +337,32 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
         Subtask subtaskOneEpicOne = new Subtask(
                 "Subtask 1 Epic 1",
                 "Описание Subtask 1 Epic 1",
-                LocalDateTime.now(), 30,
+                LocalDateTime.of(2022,12,15,10,0),
+                60,
                 epicOne.getId());
         Subtask subtaskTwoEpicOne = new Subtask(
                 "Subtask 2 Epic 1",
                 "Описание Subtask 2 Epic 1",
-                LocalDateTime.now(), 30,
+                LocalDateTime.of(2022,12,15,12,0),
+                120,
                 epicOne.getId());
         Subtask subtaskTreeEpicOne = new Subtask(
                 "Subtask 3 Epic 1",
                 "Описание Subtask 3 Epic 1",
-                LocalDateTime.now(), 30,
+                LocalDateTime.of(2022,12,15,19,0),
+                60,
                 epicOne.getId());
         Subtask subtaskOneEpicTwo = new Subtask(
                 "Subtask 1 Epic 2",
                 "Описание Subtask 1 Epic 2",
-                LocalDateTime.now(), 30,
+                LocalDateTime.of(2022,12,18,12,0),
+                300,
                 epicTwo.getId());
         Subtask subtaskTwoEpicTwo = new Subtask(
                 "Subtask 2 Epic 2",
                 "Описание Subtask 2 Epic 2",
-                LocalDateTime.now(), 30,
+                LocalDateTime.of(2022,12,19,19,0),
+                60,
                 epicTwo.getId());
 
         manager.createNewSubtask(subtaskOneEpicOne);
@@ -350,6 +393,11 @@ public class FileBackendTasksManager extends InMemoryTaskManager{
         manager.getSubtaskById(8);
         manager.deleteTaskById(0);
         manager.deleteSubtaskById(10);
-        manager.save();
+
+        printSortedTasks(getPrioritizedTask());
+        printHistory(manager.getHistory());
+
+        TaskManager newManager = Managers.getDefault(new File("src/files", "SaveTasks.csv"));
+        printHistory(newManager.getHistory());
     }
 }

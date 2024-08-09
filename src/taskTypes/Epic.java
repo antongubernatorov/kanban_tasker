@@ -5,15 +5,17 @@ import taskTypes.Task;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
 
     private final List<Integer> subtaskIds;
+    private LocalDateTime endTime;
 
     public Epic(int id, String name, String description, LocalDateTime startTime, int duration) {
-        super(id, name, description, startTime, duration);
+        super(id, name, description, null, 0);
         subtaskIds = new ArrayList<>();
     }
 
@@ -58,5 +60,14 @@ public class Epic extends Task {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), subtaskIds);
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 }

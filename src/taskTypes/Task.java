@@ -1,18 +1,23 @@
 package taskTypes;
 
 
+import javax.swing.text.DateFormatter;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Comparable<Task> {
     private int id;
     private String name;
     private String description;
     private TaskStatus status;
     private int duration;
     private LocalDateTime startTime;
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH.mm");
 
     public Task(int id, String name, String description, LocalDateTime startTime, int duration){
         this.id = id;
@@ -86,7 +91,7 @@ public class Task {
                 name + "," +
                 status + "," +
                 description + "," +
-                startTime + "," +
+                formatter.format(startTime) + "," +
                 duration;
     }
 
@@ -125,5 +130,16 @@ public class Task {
            return null;
         }
         return this.startTime.plusMinutes(duration);
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        if(this.startTime.isBefore(o.startTime)){
+            return -1;
+        } else if (this.startTime.isEqual(o.startTime)){
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }

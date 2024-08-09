@@ -33,5 +33,5 @@ public interface TaskManager {
     void remove(int id);
     List<Subtask> getSubtaskByEpic(Epic epic);
 
-
+    int getEpicEndTime(int id);
 }
