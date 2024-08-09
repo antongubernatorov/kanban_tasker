@@ -20,7 +20,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        CustomLinkedList.Node<Task> node = tasksList.getNode(id);
+        CustomLinkedList.Node node = tasksList.getNode(id);
         tasksList.removeNode(node);
     }
 }

@@ -45,7 +45,7 @@ public class InMemoryTaskManager implements TaskManager {
         return subTasks;
     }
 
-    public static List<Task> getPrioritizedTask() {
+    public List<Task> getPrioritizedTask() {
         return new ArrayList<>(prioritizedTask);
     }
 
@@ -81,8 +81,8 @@ public class InMemoryTaskManager implements TaskManager {
         int id = generateNewId();
         epic.setId(id);
         epic.setStatus(TaskStatus.NEW);
-        calcEpicStartAndFinish(epic);
         epics.put(id,epic);
+        calcEpicStartAndFinish(epic);
     }
 
     @Override
@@ -133,14 +133,14 @@ public class InMemoryTaskManager implements TaskManager {
         calcEpicStartAndFinish(epic);
     }
 
-    private void calcEpicStartTime(Epic epic){
+    private void calcEpicStart(Epic epic) {
         List<Subtask> epicSubtasks = getSubtaskByEpic(epic);
-        if(!epicSubtasks.isEmpty()){
+        if (!epicSubtasks.isEmpty()) {
             LocalDateTime startTime = null;
-            for (Subtask subtask : epicSubtasks){
-                if(startTime == null){
+            for (Subtask subtask : epicSubtasks) {
+                if (startTime == null) {
                     startTime = subtask.getStartTime();
-                } else if (subtask.getStartTime().isBefore(startTime)){
+                }else if (subtask.getStartTime().isBefore(startTime)){
                     startTime = subtask.getStartTime();
                 }
             }
@@ -148,36 +148,36 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void calcEpicStartAndFinish(Epic epic){
-        calcEpicStartTime(epic);
-        calcEpicEndTime(epic);
-        calcEpicDuration(epic);
+    private void calcEpicDuration(Epic epic) {
+        List<Subtask> epicSubtasks = getSubtaskByEpic(epic);
+        if (!epicSubtasks.isEmpty()) {
+            int duration = 0;
+            for (Subtask subtask : epicSubtasks) {
+                duration += subtask.getDuration();
+            }
+            epic.setDuration(duration);
+        }
     }
 
-    private void calcEpicEndTime(Epic epic){
+    private void calcEpicFinish(Epic epic) {
         List<Subtask> epicSubtasks = getSubtaskByEpic(epic);
-        if(!epicSubtasks.isEmpty()){
+        if (epicSubtasks.size() > 0) {
             LocalDateTime endTime = null;
-            for (Subtask subtask : epicSubtasks){
-                if(endTime == null){
-                    endTime = subtask.getStartTime();
-                } else if (subtask.getStartTime().isAfter(endTime)){
-                    endTime = subtask.getStartTime();
+            for (Subtask subtask : epicSubtasks) {
+                if (endTime == null) {
+                    endTime = subtask.getEndTime();
+                } else if (subtask.getEndTime().isAfter(endTime)) {
+                    endTime = subtask.getEndTime();
                 }
             }
             epic.setEndTime(endTime);
         }
     }
 
-    private void calcEpicDuration(Epic epic){
-        List<Subtask> subtasksList = getSubtaskByEpic(epic);
-        if (!subtasksList.isEmpty()) {
-            int duration = 0;
-            for (Subtask subtask : subtasksList) {
-                duration += subtask.getDuration();
-            }
-            epic.setDuration(duration);
-        }
+    private void calcEpicStartAndFinish(Epic epic){
+        calcEpicStart(epic);
+        calcEpicFinish(epic);
+        calcEpicDuration(epic);
     }
 
     private void addNewPrioritizedTask(Task task){
@@ -287,7 +287,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Subtask> getSubtaskByEpic(Epic epic) {
-        return null;
+        ArrayList<Subtask> subtaskList = new ArrayList<>();
+        for (Integer subtaskId : epic.getSubtaskIds()) {
+            subtaskList.add(subtasks.get(subtaskId));
+        }
+        return subtaskList;
     }
 
     @Override

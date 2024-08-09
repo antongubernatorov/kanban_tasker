@@ -14,13 +14,13 @@ public class Epic extends Task {
     private final List<Integer> subtaskIds;
     private LocalDateTime endTime;
 
-    public Epic(int id, String name, String description, LocalDateTime startTime, int duration) {
-        super(id, name, description, null, 0);
+    public Epic( String name, String description, LocalDateTime startTime, int duration) {
+        super(name, description, null, 0);
         subtaskIds = new ArrayList<>();
     }
 
-    public Epic(String name, String description, LocalDateTime startTime, int duration) {
-        super(name, description, startTime, duration);
+    public Epic(int id,String name, String description, LocalDateTime startTime, int duration) {
+        super(id, name, description, startTime, duration);
         subtaskIds = new ArrayList<>();
     }
 

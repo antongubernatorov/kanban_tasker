@@ -1,12 +1,8 @@
 package taskTypes;
 
 
-import javax.swing.text.DateFormatter;
-import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.Objects;
 
 public class Task implements Comparable<Task> {
