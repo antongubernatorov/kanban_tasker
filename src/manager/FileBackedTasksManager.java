@@ -257,7 +257,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         TaskManager manager = Managers.getNewDefault(new File("src/files", "SaveTasks.csv"));
 
         Task taskOne = new Task(

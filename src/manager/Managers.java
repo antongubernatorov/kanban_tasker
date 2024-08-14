@@ -1,6 +1,7 @@
 package manager;
 
 import java.io.File;
+import java.net.URL;
 
 public class Managers {
     public static TaskManager getDefault() {
@@ -19,4 +20,7 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
+    public static TaskManager getDefault(URL url) {
+        return new HttpTaskManager(url);
+    }
 }
